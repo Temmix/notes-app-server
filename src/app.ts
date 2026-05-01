@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./auth/index";
 import { env } from "./config/env";
+import notesRouter from "./routes/notes";
 
 export interface BuildAppOptions {
   /**
@@ -28,6 +29,8 @@ export function buildApp(options: BuildAppOptions = {}): Express {
   app.all("/api/auth/*splat", toNodeHandler(auth));
 
   app.use(express.json());
+
+  app.use("/api/notes", notesRouter);
 
   if (options.testRouter) {
     app.use("/api/_test", options.testRouter);
