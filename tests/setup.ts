@@ -1,5 +1,6 @@
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
+import { db } from "../src/db/prisma";
 
 const envFile = resolve(process.cwd(), ".env.test");
 if (existsSync(envFile)) {
@@ -15,9 +16,16 @@ if (!url.endsWith("_test")) {
   );
 }
 
-// TODO (Phase 3): once prisma/schema.prisma exists, run migrations and wire truncateAll().
-// For now setup just guards the env and keeps tests/setup runnable.
+export async function truncateAll(): Promise<void> {
+  await db.$executeRawUnsafe(
+    'TRUNCATE TABLE "notes", "session", "account", "verification", "user" RESTART IDENTITY CASCADE',
+  );
+}
 
 afterEach(async () => {
-  // Phase 3 will replace this with truncateAll() against the test DB.
+  await truncateAll();
+});
+
+afterAll(async () => {
+  await db.$disconnect();
 });
