@@ -6,6 +6,7 @@ import { auth } from "./auth/index";
 import { env } from "./config/env";
 import notesRouter from "./routes/notes";
 import publicNotesRouter from "./routes/public-notes";
+import { errorHandler } from "./errors";
 
 export interface BuildAppOptions {
   /**
@@ -20,7 +21,7 @@ export function buildApp(options: BuildAppOptions = {}): Express {
 
   app.use(
     cors({
-      origin: env.CLIENT_URL,
+      origin: [env.CLIENT_URL],
       credentials: true,
     }),
   );
@@ -37,6 +38,8 @@ export function buildApp(options: BuildAppOptions = {}): Express {
   if (options.testRouter) {
     app.use("/api/_test", options.testRouter);
   }
+
+  app.use(errorHandler);
 
   return app;
 }
