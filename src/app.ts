@@ -5,6 +5,7 @@ import { toNodeHandler } from "better-auth/node";
 import { auth } from "./auth/index";
 import { env } from "./config/env";
 import notesRouter from "./routes/notes";
+import publicNotesRouter from "./routes/public-notes";
 
 export interface BuildAppOptions {
   /**
@@ -31,6 +32,7 @@ export function buildApp(options: BuildAppOptions = {}): Express {
   app.use(express.json());
 
   app.use("/api/notes", notesRouter);
+  app.use("/api/public-notes", publicNotesRouter);
 
   if (options.testRouter) {
     app.use("/api/_test", options.testRouter);

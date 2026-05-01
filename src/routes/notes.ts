@@ -6,10 +6,12 @@ import {
   deleteNote,
   getNoteById,
   getNotesByUser,
+  setNotePublic,
   updateNote,
 } from "../repositories/notes";
 import {
   CreateNoteRequestSchema,
+  ShareRequestSchema,
   TipTapDocSchema,
   UpdateNoteRequestSchema,
 } from "../schemas/notes";
@@ -99,6 +101,32 @@ router.delete("/:id", async (req, res) => {
     return;
   }
   res.status(204).end();
+});
+
+router.post("/:id/share", async (req, res) => {
+  try {
+    const parsed = ShareRequestSchema.parse(req.body);
+    const note = await setNotePublic(
+      req.user!.id,
+      req.params.id!,
+      parsed.isPublic,
+    );
+    if (!note) {
+      res.status(404).json({ error: "Not found" });
+      return;
+    }
+    res.json({
+      id: note.id,
+      isPublic: note.isPublic,
+      publicSlug: note.publicSlug,
+    });
+  } catch (err) {
+    if (err instanceof ZodError) {
+      res.status(400).json({ error: "Invalid input", issues: err.issues });
+      return;
+    }
+    throw err;
+  }
 });
 
 export default router;
