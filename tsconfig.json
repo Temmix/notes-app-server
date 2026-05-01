@@ -4,8 +4,6 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "lib": ["ES2022"],
-    "outDir": "dist",
-    "rootDir": "src",
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "noImplicitOverride": true,
@@ -15,8 +13,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "verbatimModuleSyntax": false,
-    "sourceMap": true,
-    "declaration": false,
+    "noEmit": true,
     "types": ["node", "vitest/globals"]
   },
   "include": ["src/**/*", "tests/**/*", "vitest.config.ts"],
